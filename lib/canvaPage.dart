@@ -71,7 +71,7 @@ class _CanvaPageState extends State<CanvaPage> {
           Positioned(
               top: 40,
               right: 30,
-              left: 30,
+              left: 1,
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 child: Row(
@@ -105,13 +105,12 @@ class _CanvaPageState extends State<CanvaPage> {
         child: Container(
           padding: const EdgeInsets.all(10),
           color: Colors.grey[300],
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: List.generate(
-              colors.length,
-              (index) => _buildColorChoose(colors[index]),
-            ),
-          ),
+          child: ListView.builder(
+              itemCount: colors.length,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (BuildContext context, int index) {
+                return _buildColorChoose(colors[index]);
+              }),
         ),
       ),
     );
