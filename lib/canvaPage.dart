@@ -28,43 +28,78 @@ class _CanvaPageState extends State<CanvaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GestureDetector(
-        onPanStart: (details) {
-          setState(() {
-            drawingPoints.add(DrawingPoint(
-              details.localPosition,
-              Paint()
-                ..color = selectedColor
-                ..isAntiAlias = true
-                ..strokeWidth = strokeWidth
-                ..strokeCap = StrokeCap.round,
-            ));
-          });
-        },
-        onPanUpdate: (details) {
-          setState(() {
-            drawingPoints.add(DrawingPoint(
-              details.localPosition,
-              Paint()
-                ..color = selectedColor
-                ..isAntiAlias = true
-                ..strokeWidth = strokeWidth
-                ..strokeCap = StrokeCap.round,
-            ));
-          });
-        },
-        onPanEnd: (details) {
-          setState(() {
-            drawingPoints.add(DrawingPoint(null, null));
-          });
-        },
-        child: CustomPaint(
-          painter: _DrawingPainter(drawingPoints),
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
+      body: Stack(
+        children: [
+          GestureDetector(
+            onPanStart: (details) {
+              setState(() {
+                drawingPoints.add(DrawingPoint(
+                  details.localPosition,
+                  Paint()
+                    ..color = selectedColor
+                    ..isAntiAlias = true
+                    ..strokeWidth = strokeWidth
+                    ..strokeCap = StrokeCap.round,
+                ));
+              });
+            },
+            onPanUpdate: (details) {
+              setState(() {
+                drawingPoints.add(DrawingPoint(
+                  details.localPosition,
+                  Paint()
+                    ..color = selectedColor
+                    ..isAntiAlias = true
+                    ..strokeWidth = strokeWidth
+                    ..strokeCap = StrokeCap.round,
+                ));
+              });
+            },
+            onPanEnd: (details) {
+              setState(() {
+                drawingPoints.add(DrawingPoint(null, null));
+              });
+            },
+            child: CustomPaint(
+              painter: _DrawingPainter(drawingPoints),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+              ),
+            ),
           ),
-        ),
+          Positioned(
+              top: 40,
+              right: 30,
+              left: 30,
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Slider(
+                      min: 0,
+                      max: 40,
+                      value: strokeWidth,
+                      onChanged: (value) {
+                        setState(() {
+                          strokeWidth = value;
+                        });
+                      },
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          drawingPoints = [];
+                        });
+                      },
+                      icon: Icon(Icons.delete),
+                      label: Text("Clear Board"),
+                    )
+                  ],
+                ),
+              ))
+        ],
       ),
       bottomNavigationBar: BottomAppBar(
         child: Container(
